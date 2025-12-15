@@ -56,7 +56,7 @@ cd <PROJECT_FOLDER>
 2. Create and activate a virtual environment:
 
 ```bash
-python -m venv venv
+py -m venv venv
 # Windows
 venv\Scripts\activate
 # Linux / macOS
