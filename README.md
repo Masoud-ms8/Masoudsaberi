@@ -111,5 +111,4 @@ python manage.py runserver
 * Include images for destinations
 * Build a frontend with React or Vue connected to this API
 * Implement search and filter for destinations and travel plans
-
-```
+---
