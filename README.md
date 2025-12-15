@@ -113,5 +113,3 @@ python manage.py runserver
 * Implement search and filter for destinations and travel plans
 
 ```
-میخوای این کارو کنیم؟
-```
