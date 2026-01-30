@@ -1,114 +1,255 @@
-README.md
+# 🧭 Tourism Django Project
 
-````markdown
-# Tourism Django Project
+## 📌 Project Overview
 
-## Project Overview
-This project is a **tourism web application** built with **Django** and **Django REST Framework (DRF)**.  
-It provides information about various tourist destinations in Iran and allows managing users, destinations, and travel plans.
+This project is a **tourism backend application** built with **Django**.  
+The main goal of the project was to practice **backend architecture, data modeling, API design, and testing**.
 
-The project exposes a **RESTful API** and uses the **DRF Browsable API** for testing and visualizing data.
+The project was initially designed using **Django REST Framework (DRF)** and later **refactored and extended to use GraphQL** with **Graphene-Django** to support more flexible data querying.
 
----
-
-## Applications (Apps)
-
-### 1. accounts
-- **Purpose:** Manage users of the project.
-- **Main operations:** Register users, list users, and manage user information.
-- **Models:** User (Django default)
-- **API Endpoints:**
-  - `GET /api/users/` → List all users
-  - `POST /api/users/` → Create a new user
-  - `GET /api/users/<id>/` → Retrieve a specific user
-  - `PUT/PATCH/DELETE /api/users/<id>/` → Update or delete a user
-
-### 2. destinations
-- **Purpose:** Manage tourist destinations.
-- **Main operations:** Create, read, update, delete destinations.
-- **Models:** Destination (fields: name, city, description, created_at)
-- **API Endpoints:**
-  - `GET /api/destinations/` → List all destinations
-  - `POST /api/destinations/` → Create a new destination
-  - `GET /api/destinations/<id>/` → Retrieve a specific destination
-  - `PUT/PATCH/DELETE /api/destinations/<id>/` → Update or delete a destination
-
-### 3. plans
-- **Purpose:** Manage travel plans.
-- **Main operations:** Create travel plans, retrieve plan details, and manage plans.
-- **Models:** Plan (fields: title, description, related destinations, created_at)
-- **API Endpoints:**
-  - `GET /api/plans/` → List all plans
-  - `POST /api/plans/` → Create a new plan
-  - `GET /api/plans/<id>/` → Retrieve a specific plan
-  - `PUT/PATCH/DELETE /api/plans/<id>/` → Update or delete a plan
+The application manages:
+- Users
+- Tourist destinations
+- Travel plans
 
 ---
 
-## Installation & Running
+## 🧠 Project Evolution (Important)
 
-1. Clone the repository:
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd <PROJECT_FOLDER>
+This project was developed in **two main phases**:
+
+### Phase 1 – REST API (DRF)
+- RESTful endpoints were implemented for all resources
+- CRUD operations were supported
+- DRF Browsable API was used for manual testing
+
+### Phase 2 – GraphQL Migration (Final State)
+- REST APIs were replaced with **GraphQL**
+- Queries and Mutations were implemented
+- Centralized GraphQL schema was introduced
+- Automated tests were written for GraphQL APIs
+- Code coverage was measured and validated
+
+➡️ **Current and final version of the project uses GraphQL**.
+
+---
+
+## 🏗️ Technologies Used
+
+- Python 3
+- Django
+- Graphene-Django (GraphQL)
+- Django REST Framework (initial phase)
+- SQLite (development database)
+- Django Test Framework
+- Coverage.py
+
+---
+
+## 📁 Project Structure
+
+```
+
+tourism_project/
+├── accounts/        # User management
+├── destinations/   # Tourist destinations
+├── plans/           # Travel plans
+├── config/          # Global settings & GraphQL schema
+└── manage.py
+
 ````
 
-2. Create and activate a virtual environment:
+---
 
-```bash
-py -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux / macOS
-source venv/bin/activate
-```
+## 👤 Accounts App
 
-3. Install dependencies:
+### Purpose
+Manage users of the system.
 
-```bash
-pip install -r requirements.txt
-```
+### Model
+- Django default `User` model
 
-4. Apply migrations:
+### GraphQL
+- Query:
+  - `allUsers`
+- Mutation:
+  - `createUser`
 
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-5. Create a superuser for admin access:
-
-```bash
-python manage.py createsuperuser
-```
-
-6. Run the development server:
-
-```bash
-python manage.py runserver
-```
-
-7. Access the API in your browser:
-
-* Users: `http://127.0.0.1:8000/api/users/`
-* Destinations: `http://127.0.0.1:8000/api/destinations/`
-* Plans: `http://127.0.0.1:8000/api/plans/`
-* Browsable DRF interface is available for all endpoints.
+### Example Query
+```graphql
+query {
+  allUsers {
+    id
+    username
+    email
+  }
+}
+````
 
 ---
 
-## Important Notes
+## 🏨 Destinations App
 
-* The `venv/` folder is ignored (`.gitignore` included)
-* Default database: SQLite (`db.sqlite3` is also ignored)
-* All API endpoints support **GET, POST, PUT, PATCH, DELETE** methods
+### Purpose
+
+Manage tourist destinations.
+
+### Model
+
+Destination fields:
+
+* name
+* city
+* description
+* price
+
+### GraphQL
+
+* Query:
+
+  * `allDestinations`
+* Mutation:
+
+  * `createDestination`
+
+### Example Mutation
+
+```graphql
+mutation {
+  createDestination(
+    name: "Persepolis"
+    city: "Shiraz"
+    description: "Historical site"
+    price: 0
+  ) {
+    destination {
+      id
+      name
+      city
+      price
+    }
+  }
+}
+```
 
 ---
 
-## Future Enhancements
+## 🗺️ Plans App
 
-* Add advanced authentication (JWT or Token-based)
-* Include images for destinations
-* Build a frontend with React or Vue connected to this API
-* Implement search and filter for destinations and travel plans
+### Purpose
+
+Manage travel plans and their relationships.
+
+### Model
+
+Each plan:
+
+* belongs to a user
+* can include multiple destinations (Many-to-Many)
+* has title and description
+
+### GraphQL
+
+* Query:
+
+  * `allPlans`
+* Mutation:
+
+  * `createPlan`
+
+### Example Query
+
+```graphql
+query {
+  allPlans {
+    title
+    user {
+      username
+    }
+    destinations {
+      name
+      city
+    }
+  }
+}
+```
+
+---
+
+## 🔗 Relationships
+
+* A **User** can have multiple **Plans**
+* A **Plan** can include multiple **Destinations**
+* Relationships are fully tested through GraphQL queries
+
+---
+
+## 🧪 Testing
+
+GraphQL tests are written for each app:
+
+* accounts
+* destinations
+* plans
+
+### What is tested?
+
+* GraphQL endpoint availability
+* Query correctness
+* Returned data structure
+* Absence of execution errors
+
+### Run tests
+
+```bash
+python manage.py test
+```
+
+---
+
+## 📊 Test Coverage
+
+Coverage is measured using **coverage.py**.
+
+```bash
+coverage run manage.py test
+coverage report
+```
+
+* Overall test coverage is **above 80%**
+* Meets the project requirements
+
+---
+
+## 🧹 Database Cleanup During Development
+
+During development, multiple test records were created manually.
+Before final testing:
+
+* Database was cleaned
+* Data was recreated in a controlled and related manner
+* All relations were re-tested via GraphQL
+
+---
+
+## ✅ Final Project Status
+
+* ✔️ Proper data models
+* ✔️ GraphQL Queries & Mutations implemented
+* ✔️ Clean schema structure
+* ✔️ Automated tests written
+* ✔️ Coverage above required threshold
+
+---
+
+## 📝 Notes
+
+This project focuses on **learning backend concepts**, not production deployment.
+The emphasis is on:
+
+* correctness
+* structure
+* relationships
+* testing
+
 ---
